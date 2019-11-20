@@ -221,7 +221,8 @@ public class FXMLDocumentController implements Initializable {
        
        Scene escena = new Scene(root,800,500);
        stage2.setScene(escena);
-       stage2.show();
+ 
+      stage2.show();
     }
     
     
