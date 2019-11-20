@@ -5,30 +5,33 @@
  */
 package pruebasreto2;
 
-import static java.awt.SystemColor.desktop;
-import java.io.BufferedReader;
+
+
+import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
@@ -37,6 +40,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+
 
 /**
  *
@@ -47,6 +52,9 @@ public class FXMLDocumentController implements Initializable {
     private Stage stageAyuda;
     @FXML
     private WebView webView = new WebView();
+    @FXML
+    private ImageView foto;
+    private byte[] bytes;
     private WebEngine webEngine = webView.getEngine();
     
     public void setStage(Stage stage) {
@@ -86,8 +94,10 @@ public class FXMLDocumentController implements Initializable {
         if(selectedFile!=null){
             System.out.println("Bien");
             try{
-               metodo(selectedFile);
+               //metodo(selectedFile);
                //metodo2(selectedFile);
+               //metodo3(selectedFile);
+               metodo4(selectedFile);
             }catch(Exception e){
                 System.out.println(e);
             }
@@ -224,6 +234,79 @@ public class FXMLDocumentController implements Initializable {
  
       stage2.show();
     }
-    
+    private void metodo3(File selectedFile) {
+        try {
+            bytes=Files.readAllBytes(selectedFile.toPath());
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        /*
+        BufferedImage bImage2;
+        try{
+            ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+            bImage2 = ImageIO.read(bis);
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        foto.setImage(bImage2.);
+        */
+        //InputStream is=new InputStream();
+       foto.setImage(new Image(new ByteArrayInputStream(bytes)));
+    }
+    private void metodo4(File selectedFile) {
+        try {
+            bytes=Files.readAllBytes(selectedFile.toPath());
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        /*
+        BufferedImage bImage2;
+        try{
+            ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+            bImage2 = ImageIO.read(bis);
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        foto.setImage(bImage2.);
+        */
+        //InputStream is=new InputStream();
+        FileChooser fileChooser = new FileChooser();
+ 
+            //Set extension filter for text files
+            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf");
+            fileChooser.getExtensionFilters().add(extFilter);
+ 
+            //Show save file dialog
+            File file = fileChooser.showSaveDialog(stage);
+ 
+            if (file != null) {
+                System.out.println(file);
+                byteArrayToFile(bytes,file);
+                //saveTextToFile("sampleText", selectedFile);
+                //fileChooser.setInitialDirectory(selectedFile.getParentFile());
+            }
+      // foto.setImage(new Image(new ByteArrayInputStream(bytes)));
+      
+    }
+    private void saveTextToFile(String content, File file) {
+        try {
+            PrintWriter writer;
+            writer = new PrintWriter(file);
+            writer.println(content);
+            writer.close();
+        } catch (IOException ex) {
+            System.out.println("error al guardar");
+        }
+    }
+    static void byteArrayToFile(byte[] bArray,File file) {  
+        try {  
+            // Create file  
+            OutputStream out = new FileOutputStream(file.getPath());
+            out.write(bArray);
+            out.close(); 
+        } catch (Exception e) {  
+            System.err.println("Error: " + e.getMessage());  
+        }  
+    }
     
 }
