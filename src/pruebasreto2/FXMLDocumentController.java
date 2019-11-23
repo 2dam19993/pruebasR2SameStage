@@ -9,6 +9,7 @@ package pruebasreto2;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -89,15 +90,18 @@ public class FXMLDocumentController implements Initializable {
         }
 */
         FileChooser fc=new FileChooser();
-        fc.getExtensionFilters().addAll(new ExtensionFilter("PDF Files","*.pdf"));
+        //fc.getExtensionFilters().addAll(new ExtensionFilter("PDF Files","*.png"));
+        fc.getExtensionFilters().addAll(new ExtensionFilter("PDF Files","*.PDF"));
         File selectedFile = fc.showOpenDialog(null);
         if(selectedFile!=null){
             System.out.println("Bien");
             try{
                //metodo(selectedFile);
                //metodo2(selectedFile);
-               //metodo3(selectedFile);
-               metodo4(selectedFile);
+               //IMAGEN
+             //  metodo3(selectedFile);
+              // metodo4(selectedFile);
+               metodo5(selectedFile);
             }catch(Exception e){
                 System.out.println(e);
             }
@@ -280,10 +284,11 @@ public class FXMLDocumentController implements Initializable {
             File file = fileChooser.showSaveDialog(stage);
  
             if (file != null) {
-                System.out.println(file);
-                byteArrayToFile(bytes,file);
+                //System.out.println(file);
+                //byteArrayToFile(bytes,file);
                 //saveTextToFile("sampleText", selectedFile);
                 //fileChooser.setInitialDirectory(selectedFile.getParentFile());
+                bytesToPdf(bytes,file);
             }
       // foto.setImage(new Image(new ByteArrayInputStream(bytes)));
       
@@ -307,6 +312,63 @@ public class FXMLDocumentController implements Initializable {
         } catch (Exception e) {  
             System.err.println("Error: " + e.getMessage());  
         }  
+    }
+
+    private void bytesToPdf(byte[] bytes, File file) {
+        try{
+            OutputStream out = new FileOutputStream(file.getPath());
+            out.write(bytes);
+            out.close();
+        } catch (Exception e) {  
+            System.err.println("Error: " + e.getMessage());  
+        } 
+    }
+
+    private void metodo5(File selectedFile) {
+        FileInputStream fileInputStream = null;
+         //File file = new File("C:\\temp\\testing1.txt");
+        try{
+            byte[] bFile = new byte[(int) selectedFile.length()];
+            fileInputStream = new FileInputStream(selectedFile);
+            fileInputStream.read(bFile);
+            FileChooser fileChooser = new FileChooser();
+            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf");
+            fileChooser.getExtensionFilters().add(extFilter);
+            File fileC = fileChooser.showSaveDialog(stage);
+            writeBytesToFile(bFile,fileC);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fileInputStream != null) {
+                try {
+                    fileInputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+    }
+
+    private void writeBytesToFile(byte[] bFile, File fileC) {
+        
+        FileOutputStream fileOuputStream = null;
+
+        try {
+            fileOuputStream = new FileOutputStream(fileC.getPath());
+            fileOuputStream.write(bFile);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fileOuputStream != null) {
+                try {
+                    fileOuputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
     
 }
