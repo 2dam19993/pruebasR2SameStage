@@ -92,7 +92,14 @@ public class FXMLDocumentController implements Initializable {
         FileChooser fc=new FileChooser();
         //fc.getExtensionFilters().addAll(new ExtensionFilter("PDF Files","*.png"));
         fc.getExtensionFilters().addAll(new ExtensionFilter("PDF Files","*.PDF"));
-        File selectedFile = fc.showOpenDialog(null);
+       
+        //TEST CAMBIAR NULL
+       // String asd1="F:\\Descargas\\";
+       // String asd2="PRUEBAS\\";
+       // File asd= new File(asd1+asd2);
+        //fc.setInitialDirectory(asd);
+         File selectedFile = fc.showOpenDialog(null);
+         //System.out.println(selectedFile.getPath());
         if(selectedFile!=null){
             System.out.println("Bien");
             try{
