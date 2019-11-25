@@ -20,6 +20,8 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -108,7 +110,9 @@ public class FXMLDocumentController implements Initializable {
                //IMAGEN
              //  metodo3(selectedFile);
               // metodo4(selectedFile);
-               metodo5(selectedFile);
+              //PDF BUENO
+             //  metodo5(selectedFile);
+             metodo6(selectedFile);
             }catch(Exception e){
                 System.out.println(e);
             }
@@ -356,6 +360,45 @@ public class FXMLDocumentController implements Initializable {
 
         }
     }
+    private void metodo6(File selectedFile) {
+        FileInputStream fileInputStream = null;
+         //File file = new File("C:\\temp\\testing1.txt");
+        try{
+            byte[] bFile = new byte[(int) selectedFile.length()];
+            fileInputStream = new FileInputStream(selectedFile);
+            fileInputStream.read(bFile);
+            //================================================================
+            byte[] blobAsBytes=null;
+            try {
+                Blob blob = new javax.sql.rowset.serial.SerialBlob(bFile);
+                int blobLength = (int) blob.length();  
+                blobAsBytes = blob.getBytes(1, blobLength);
+                blob.free();
+            } catch (SQLException ex) {
+                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            
+            //================================================================
+            FileChooser fileChooser = new FileChooser();
+            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf");
+            fileChooser.getExtensionFilters().add(extFilter);
+            File fileC = fileChooser.showSaveDialog(stage);
+            //writeBytesToFile(bFile,fileC);
+            writeBytesToFile(blobAsBytes,fileC);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fileInputStream != null) {
+                try {
+                    fileInputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+    }
 
     private void writeBytesToFile(byte[] bFile, File fileC) {
         
@@ -377,5 +420,6 @@ public class FXMLDocumentController implements Initializable {
             }
         }
     }
+    
     
 }
